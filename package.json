@@ -1,0 +1,67 @@
+{
+  "name": "evil-v2",
+  "version": "0.1.0",
+  "author": {
+    "name": "ch-cindyyuki",
+    "email": "ch_cindyyuki@163.com"
+  },
+  "description": "Evil vue2 writing, similar to angular writing Dependency injection",
+  "homepage": "https://github.com/ch-cindyyuki/evil-v2",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ch-cindyyuki/evil-v2"
+  },
+  "private": false,
+  "bugs": {
+    "url": "https://github.com/ch-cindyyuki/evil-v2/issues",
+    "email": "ch_cindyyuki@163.com"
+  },
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "dotenv -e config/env/.env -e config/env/.env.development vite",
+    "build": "dotenv -e config/env/.env -e config/env/.env.production vite build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@vue/composition-api": "^1.4.2",
+    "axios": "^0.24.0",
+    "core-js": "^3.6.5",
+    "element-ui": "^2.15.6",
+    "injection-js": "^2.4.0",
+    "pinia": "^2.0.8",
+    "reflect-metadata": "^0.1.13",
+    "register-service-worker": "^1.7.1",
+    "vue": "^2.6.11",
+    "vue-class-component": "^7.2.3",
+    "vue-property-decorator": "^9.1.2",
+    "vue-router": "^3.2.0",
+    "vuex": "^3.4.0"
+  },
+  "devDependencies": {
+    "@originjs/vite-plugin-require-context": "^1.0.9",
+    "@typescript-eslint/eslint-plugin": "^4.18.0",
+    "@typescript-eslint/parser": "^4.18.0",
+    "@vue/babel-preset-jsx": "^1.2.4",
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-typescript": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "@vue/eslint-config-typescript": "^7.0.0",
+    "dotenv-cli": "^4.1.1",
+    "eslint": "^6.7.2",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-vue": "^6.2.2",
+    "prettier": "^2.2.1",
+    "sass": "^1.26.5",
+    "sass-loader": "^8.0.2",
+    "typescript": "~4.1.5",
+    "vite": "^2.7.10",
+    "vite-plugin-commonjs": "^0.2.6",
+    "vite-plugin-dynamic-import": "^0.1.1",
+    "vite-plugin-html-template": "^1.1.0",
+    "vite-plugin-vue2": "^1.9.2",
+    "vue-template-compiler": "^2.6.11"
+  }
+}
