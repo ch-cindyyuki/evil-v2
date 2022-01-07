@@ -1,57 +1,56 @@
 import { ReflectiveInjector } from "injection-js";
 import { MODULE_METADATA, MODULE_METAKEY } from "../utils/constants";
 import { filterModule } from "./filter";
+import { ComponentStatic } from "../component";
 
 import type { Provider } from "injection-js";
 import type { TModuleOptions } from "./types";
 
+let id = 0;
+
 class ModuleFactory {
+  _id: number = ++id;
   injector: ReflectiveInjector;
   parents: ModuleFactory[] = [];
   providers: Provider[] = [];
+  bootstrap: any;
+
+  /**
+   * 最顶层 root 模块依赖
+   */
+   get root(): ModuleFactory | null {
+    return this.parents[0] || null;
+  }
+
+  /**
+   * 上一层模块依赖
+   */
+  get parent(): ModuleFactory | null {
+    return this.parents[this.parents.length - 1] || null;
+  }
 
   constructor(options?: TModuleOptions) {
     const providers: Provider[] = options?.providers || [];
+    this.bootstrap = options?.bootstrap;
     const modules = filterModule(options?.imports || []);
 
     modules.forEach((module) => {
       const instance = ModuleStatic.getModule(module);
       if (instance) {
-        instance.parents.push(this);
+        instance.parents = this.parents.concat(this);
       }
     });
 
     this.providers = providers;
-    this.injector = ReflectiveInjector.resolveAndCreate(providers);
-  }
-
-  /**
-   * 最顶层 root 模块依赖
-   */
-  get root(): ModuleFactory | null {
-    return this.parents[0] || null;
-  }
-
-  /**
-   * 获取 provider 依赖
-   * @param token
-   */
-  getProvider(token: any) {
-    let provider = this.injector.get(token);
-    if (!provider) {
-      for (let i = 0; i < this.parents.length; i++) {
-        const module = this.parents[i];
-        const _provider = module.injector.get(token);
-        if (_provider) {
-          provider = _provider;
-          break;
-        }
+    const timer = setTimeout(() => {
+      clearTimeout(timer);
+      if (this.parent) {
+        this.injector = ReflectiveInjector.resolveAndCreate(providers, this.parent.injector);
+        console.log(providers);
+        console.log(this.injector);
       }
-    }
-    if (!provider) {
-      throw `You haven't registered ${token} service`;
-    }
-    return provider;
+    });
+    this.injector = ReflectiveInjector.resolveAndCreate(providers);
   }
 }
 

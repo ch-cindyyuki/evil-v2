@@ -7,6 +7,7 @@ import type { RouterOptions } from "vue-router";
 export type TModuleOptions = {
   imports?: any[];
   providers?: Provider[];
+  bootstrap?: any;
 };
 
 export type TVueModuleOptions = {

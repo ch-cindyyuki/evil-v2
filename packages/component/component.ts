@@ -11,20 +11,37 @@ import {
 
 import type { TComponentOptions } from "./types";
 
+let id = 0;
+
+class ComponentFactory {
+  _id: number = ++id;
+  name: string = "";
+  components: Array<TComponentOptions['components']> = [];
+
+  constructor(options?: TComponentOptions) {
+    this.name = options?.name || "";
+    this.components = options?.components || [];
+  }
+}
+
+export class ComponentStatic {
+  static getComponent(token: any): ComponentFactory | null {
+    return (Reflect.getMetadata("$component", token) as ComponentFactory) || null;
+  }
+}
+
 export function Component(options?: TComponentOptions) {
   return function (component: any) {
-    Module()(component);
-
+    Module({
+      imports: options?.components ? Object.values(options.components) : [],
+    })(Injectable()(component));
     Reflect.defineMetadata(COMPONENT_METAKEY, COMPONENT_METADATA, component);
 
-    if (options?.route) {
-      Reflect.defineMetadata(
-        ROUTE_COMPONENT_METAKEY,
-        ROUTE_COMPONENT_METADATA,
-        component
-      );
-      Reflect.defineMetadata(ROUTE_CONFIG_METAKEY, options?.route, component);
-    }
+    const instance = new ComponentFactory({
+      ...options,
+      name: options?.name || component.name,
+    });
+    Reflect.defineMetadata("$component", instance, component);
 
     return VueComponent({
       name: options?.name || component.name,
