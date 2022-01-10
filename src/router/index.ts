@@ -1,4 +1,3 @@
-import VueRouter from "vue-router";
 import { Module } from "packages";
 
 @Module({})

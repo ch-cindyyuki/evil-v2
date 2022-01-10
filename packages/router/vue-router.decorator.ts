@@ -1,6 +1,6 @@
 import Vue from "vue";
 
-import { Module } from "./module";
+import { Module } from "../module/module";
 import { filterRouteComponent } from "../component/filter";
 import {
   ROUTER_MODULE_METADATA,
@@ -11,13 +11,13 @@ import {
 import { isFunction } from "../utils/shared";
 
 import type { RouteConfig } from "vue-router";
-import type { TVueRouterOptions } from "./types";
+import type { TVueRouterOptions } from "../module/types";
 
 export function VueRouter(options: TVueRouterOptions): ClassDecorator {
   const imports = options?.imports || [];
   let routeComponents: any[] = [];
   const asyncRouteComponents: Array<() => Promise<any>> = [];
-  imports.forEach(_import => {
+  imports.forEach((_import) => {
     if (isFunction(_import)) {
       // 异步加载的路由组件
       asyncRouteComponents.push(_import);

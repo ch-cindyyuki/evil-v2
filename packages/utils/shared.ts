@@ -1,3 +1,5 @@
+import Vue from "vue";
+
 export const isUndefined = (obj: any) => typeof obj === "undefined";
 export const isNil = (obj: any) => isUndefined(obj) || obj === null;
 export const isObject = (fn: any) => !isNil(fn) && typeof fn === "object";
@@ -40,4 +42,16 @@ export const isEmpty = (array: any[]) => !(array && array.length > 0);
 export const isSymbol = (fn: any) => typeof fn === "symbol";
 export const isPromise = (val: any): boolean => {
   return isObject(val) && isFunction(val.then) && isFunction(val.catch);
+};
+export const defineReadonlyValue = (
+  target: any,
+  key: string | number | symbol,
+  value: any
+) => {
+  Object.defineProperty(target, key, {
+    value,
+    configurable: false,
+    enumerable: true,
+    writable: false,
+  });
 };

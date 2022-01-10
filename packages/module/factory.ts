@@ -2,13 +2,16 @@ import Vue from "vue";
 import { ModuleStatic } from "./module";
 
 class VueFactoryStatic {
-  rootModule: any;
-
   create(module: any) {
-    const instance = ModuleStatic.getModule(module);
-    const root = instance?.root || instance;
+    const refModule = ModuleStatic.getRefModule(module);
+
+    if (refModule) {
+      ModuleStatic.injectRefModuleForVue(refModule);
+    }
+
+    const root = refModule?.root || refModule;
     return new Vue({
-      render: (h) => h(root?.bootstrap),
+      render: (h) => h(root?.$options.bootstrap),
     });
   }
 }
