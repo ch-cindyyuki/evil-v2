@@ -1,18 +1,18 @@
 import { VueConstructor } from "vue";
 import VueRouter from "vue-router";
-import { Provider } from "injection-js";
 
 import type { RouterOptions } from "vue-router";
+import type { TProvider } from "../injector";
 
 export type TModuleOptions = {
   imports?: any[];
-  providers?: Provider[];
+  providers?: TProvider[];
   bootstrap?: any;
 };
 
 export type TVueModuleOptions = {
   imports?: any[];
-  providers?: Provider[];
+  providers?: TProvider[];
   bootstrap: TBootstrap;
 };
 

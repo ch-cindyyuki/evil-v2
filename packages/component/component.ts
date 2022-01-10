@@ -1,6 +1,4 @@
-import { Component as VueComponent } from "vue-property-decorator";
-import { Injectable } from "injection-js";
-import { Module } from "../module";
+import { componentFactory } from "./factory";
 import {
   COMPONENT_METAKEY,
   COMPONENT_METADATA,
@@ -9,18 +7,13 @@ import {
   ROUTE_CONFIG_METAKEY,
 } from "../utils/constants";
 
-import type { TComponentOptions } from "./types";
-
-let id = 0;
+import type { TComponentOptions, TComponent } from "./types";
 
 class ComponentFactory {
-  _id: number = ++id;
   name: string = "";
-  components: Array<TComponentOptions['components']> = [];
 
   constructor(options?: TComponentOptions) {
     this.name = options?.name || "";
-    this.components = options?.components || [];
   }
 }
 
@@ -31,10 +24,7 @@ export class ComponentStatic {
 }
 
 export function Component(options?: TComponentOptions) {
-  return function (component: any) {
-    Module({
-      imports: options?.components ? Object.values(options.components) : [],
-    })(Injectable()(component));
+  return function (component: TComponent) {
     Reflect.defineMetadata(COMPONENT_METAKEY, COMPONENT_METADATA, component);
 
     const instance = new ComponentFactory({
@@ -43,9 +33,9 @@ export function Component(options?: TComponentOptions) {
     });
     Reflect.defineMetadata("$component", instance, component);
 
-    return VueComponent({
+    return componentFactory(component, {
       name: options?.name || component.name,
       components: options?.components || {},
-    })(component);
+    });
   };
 }

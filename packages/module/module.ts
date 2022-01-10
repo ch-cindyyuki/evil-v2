@@ -1,24 +1,22 @@
-import { ReflectiveInjector } from "injection-js";
+import { RefInjector } from "../injector";
 import { MODULE_METADATA, MODULE_METAKEY } from "../utils/constants";
 import { filterModule } from "./filter";
 import { ComponentStatic } from "../component";
 
-import type { Provider } from "injection-js";
 import type { TModuleOptions } from "./types";
 
 let id = 0;
 
 class ModuleFactory {
-  _id: number = ++id;
-  injector: ReflectiveInjector;
+  private _id: number = ++id;
+  private _refInjector: RefInjector;
   parents: ModuleFactory[] = [];
-  providers: Provider[] = [];
   bootstrap: any;
 
   /**
    * 最顶层 root 模块依赖
    */
-   get root(): ModuleFactory | null {
+  get root(): ModuleFactory | null {
     return this.parents[0] || null;
   }
 
@@ -29,8 +27,11 @@ class ModuleFactory {
     return this.parents[this.parents.length - 1] || null;
   }
 
+  get refInjector(): RefInjector {
+    return this._refInjector;
+  }
+
   constructor(options?: TModuleOptions) {
-    const providers: Provider[] = options?.providers || [];
     this.bootstrap = options?.bootstrap;
     const modules = filterModule(options?.imports || []);
 
@@ -41,16 +42,10 @@ class ModuleFactory {
       }
     });
 
-    this.providers = providers;
-    const timer = setTimeout(() => {
-      clearTimeout(timer);
-      if (this.parent) {
-        this.injector = ReflectiveInjector.resolveAndCreate(providers, this.parent.injector);
-        console.log(providers);
-        console.log(this.injector);
-      }
-    });
-    this.injector = ReflectiveInjector.resolveAndCreate(providers);
+    this._refInjector = new RefInjector(
+      options?.providers || [],
+      this.parent?.refInjector.injector
+    );
   }
 }
 
